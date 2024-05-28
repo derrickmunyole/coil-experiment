@@ -1,7 +1,6 @@
 package com.example.coilexperiment.di
 
 import com.example.coilexperiment.domain.PhotosRepositoryImpl
-import com.example.coilexperiment.repository.PhotosApi
 import com.example.coilexperiment.repository.PhotosApiService
 import dagger.Module
 import dagger.Provides
@@ -15,7 +14,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object PhotosModule {
 
-    const val BASE_URL = ""
+    private const val BASE_URL = "https://pixabay.com/"
     val photosApi: PhotosApiService by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)

@@ -1,4 +1,4 @@
-package com.example.coilexperiment.repository
+package com.example.coilexperiment.data.repository
 
 data class Hit(
     val collections: Int,

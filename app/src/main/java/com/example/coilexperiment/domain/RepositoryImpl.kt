@@ -1,14 +1,19 @@
 package com.example.coilexperiment.domain
 
-import com.example.coilexperiment.repository.PhotoDTO
-import com.example.coilexperiment.repository.PhotosApiService
+import com.example.coilexperiment.data.repository.PhotoDTO
+import com.example.coilexperiment.data.repository.PhotoMapper
+import com.example.coilexperiment.data.repository.PhotosApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
+import javax.inject.Inject
 
-class PhotosRepositoryImpl(private val photosApi: PhotosApiService) {
-    private var photos: List<PhotoDTO>? = null
+class PhotosRepositoryImpl @Inject constructor(
+    private val photosApi: PhotosApiService,
+    private val photoMapper: PhotoMapper
+) {
+    private var photos: List<Photo>? = null
     private var error: Throwable? = null
     val apiKey = ""
     val query = ""
@@ -18,10 +23,12 @@ class PhotosRepositoryImpl(private val photosApi: PhotosApiService) {
         fetchPhotos()
     }
 
-    private fun fetchPhotos() {
+    private fun fetchPhotos(): List<Photo> {
+        var photos = emptyList<Photo>()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                photos = photosApi.getPhotos(apiKey, query, imageType)
+                val photosDTO = photosApi.getPhotos(apiKey, query, imageType)
+                photos = photoMapper.mapToDomain(photosDTO)
             } catch(e: IOException) {
                 error = e
             } catch (e: Exception) {
@@ -29,9 +36,10 @@ class PhotosRepositoryImpl(private val photosApi: PhotosApiService) {
             }
 
         }
+        return photos
     }
 
-    val photosList: List<PhotoDTO>
+    val photosList: List<Photo>
         get() = photos?: throw IllegalStateException("Photos not loaded yet")
 
     val isLoading: Boolean

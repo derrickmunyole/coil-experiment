@@ -1,4 +1,4 @@
-package com.example.coilexperiment.repository
+package com.example.coilexperiment.data.repository
 
 import retrofit2.http.GET
 import retrofit2.http.Query

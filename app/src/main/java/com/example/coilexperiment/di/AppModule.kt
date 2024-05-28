@@ -1,7 +1,8 @@
 package com.example.coilexperiment.di
 
+import com.example.coilexperiment.data.repository.PhotoMapper
 import com.example.coilexperiment.domain.PhotosRepositoryImpl
-import com.example.coilexperiment.repository.PhotosApiService
+import com.example.coilexperiment.data.repository.PhotosApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,8 +26,14 @@ object PhotosModule {
 
     @Provides
     @Singleton
-    fun providePhotosRepository(photosApi: PhotosApiService): PhotosRepositoryImpl {
-        return PhotosRepositoryImpl(photosApi)
+    fun providePhotoMapper(): PhotoMapper {
+        return PhotoMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun providePhotosRepository(photosApi: PhotosApiService, photoMapper: PhotoMapper): PhotosRepositoryImpl {
+        return PhotosRepositoryImpl(photosApi, photoMapper)
     }
 
 }

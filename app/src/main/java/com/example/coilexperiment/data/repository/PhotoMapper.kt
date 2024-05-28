@@ -1,7 +1,7 @@
 package com.example.coilexperiment.data.repository
 
 import com.example.coilexperiment.domain.EntityMapper
-import com.example.coilexperiment.domain.Photo
+import com.example.coilexperiment.domain.model.Photo
 import javax.inject.Inject
 
 class PhotoMapper @Inject constructor() : EntityMapper<List<PhotoDTO>, List<Photo>> {

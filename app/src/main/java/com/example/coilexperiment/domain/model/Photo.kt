@@ -1,4 +1,4 @@
-package com.example.coilexperiment.domain
+package com.example.coilexperiment.domain.model
 
 data class Photo(
     val id: Int,

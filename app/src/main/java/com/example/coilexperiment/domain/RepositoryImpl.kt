@@ -1,11 +1,11 @@
 package com.example.coilexperiment.domain
 
-import com.example.coilexperiment.data.repository.PhotoDTO
 import com.example.coilexperiment.data.repository.PhotoMapper
 import com.example.coilexperiment.data.repository.PhotosApiService
-import kotlinx.coroutines.CoroutineScope
+import com.example.coilexperiment.domain.model.Photo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
@@ -19,25 +19,19 @@ class PhotosRepositoryImpl @Inject constructor(
     val query = ""
     val imageType = ""
 
-    init {
-        fetchPhotos()
-    }
-
-    private fun fetchPhotos(): List<Photo> {
-        var photos = emptyList<Photo>()
-        CoroutineScope(Dispatchers.IO).launch {
+    suspend fun fetchPhotos(): List<Photo> {
+        return withContext(Dispatchers.IO) {
             try {
                 val photosDTO = photosApi.getPhotos(apiKey, query, imageType)
-                photos = photoMapper.mapToDomain(photosDTO)
-            } catch(e: IOException) {
-                error = e
+                photoMapper.mapToDomain(photosDTO)
+            } catch (e: IOException) {
+                throw Throwable(message="Network error", e)
             } catch (e: Exception) {
-                error = e
+                throw Throwable(message = "There was an unexpected error", e)
             }
-
         }
-        return photos
     }
+
 
     val photosList: List<Photo>
         get() = photos?: throw IllegalStateException("Photos not loaded yet")
